@@ -128,5 +128,3 @@ class VasprunLike:
         energy_correction_scheme.process_entry(entry)
 
         return entry
-        return entry
-        return entry

@@ -9,10 +9,12 @@ import numpy as np
 import numpy.typing
 from pandas import DataFrame
 from pymatgen.analysis.phase_diagram import PhaseDiagram
+from pymatgen.entries.compatibility import MaterialsProject2020Compatibility
 from tqdm import tqdm
 
 from mattergen.evaluation.metrics.core import BaseAggregateMetric, BaseMetric, BaseMetricsCapability
 from mattergen.evaluation.metrics.structure import StructureMetricsCapability
+from mattergen.evaluation.reference.correction_schemes import TRI110Compatibility2024
 from mattergen.evaluation.reference.reference_dataset import ReferenceDataset
 from mattergen.evaluation.utils.globals import DEFAULT_STABILITY_THRESHOLD
 from mattergen.evaluation.utils.logging import logger
@@ -116,6 +118,7 @@ class EnergyMetricsCapability(BaseMetricsCapability):
             self.warn_missing_data(missing_terminals)
             raise MissingTerminalsError(self.missing_terminals_error_str)
         super().__init__(structure_summaries=structure_summaries, n_failed_jobs=n_failed_jobs)
+        check_energy_correction_scheme_compatibility(reference_dataset, structure_summaries)
         self.reference_dataset = reference_dataset
         self.stability_threshold = stability_threshold
 
@@ -356,3 +359,15 @@ class FracNovelUniqueStableStructures(BaseEnergyMetric, BaseAggregateMetric):
             & self.structure_capability.is_unique
             & self.energy_capability.is_stable
         )
+
+
+def check_energy_correction_scheme_compatibility(reference_dataset: ReferenceDataset, structure_summaries: list[MetricsStructureSummary]):
+
+    energy_correction_schemes = set([e.name for structure_summary in structure_summaries for e in structure_summary.entry.energy_adjustments])
+
+    if reference_dataset.name == "MP2020correction":
+        assert all(['MP2020' in s for s in energy_correction_schemes]), "Reference dataset contains energy corrections that are not compatible with MP2020correction scheme."
+    elif reference_dataset.name == "TRI2024correction":
+        assert all(['TRI' in s for s in energy_correction_schemes]), "Reference dataset contains energy corrections that are not compatible with TRI2024correction scheme."
+    else:
+        logger.warning("Using a custom reference dataset. Make sure that the energy corrections used in the dataset are compatible with the reference dataset.")
