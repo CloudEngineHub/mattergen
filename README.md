@@ -213,7 +213,8 @@ for structure, energy in zip(structures, energies)
   ))
 ```
 
-Because of some known issues with the MaterialsProject2020Compatibility scheme, we recommend using the `TRI110Compatibility2024` correction scheme to evaluate stability of materials outside benchmarks.
+> [!NOTE]
+> Because of some known issues with the MaterialsProject2020Compatibility scheme, we recommend using the `TRI110Compatibility2024` reference dataset and correction scheme to evaluate stability of materials outside benchmarks.
 To do so, run: 
 ``` python
 from mattergen.evaluation.utils.vasprunlike import VasprunLike
