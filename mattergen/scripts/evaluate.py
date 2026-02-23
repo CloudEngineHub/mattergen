@@ -12,7 +12,7 @@ from pymatgen.entries.compatibility import MaterialsProject2020Compatibility
 from mattergen.common.utils.eval_utils import load_structures
 from mattergen.common.utils.globals import get_device
 from mattergen.evaluation.evaluate import evaluate
-from mattergen.evaluation.reference.correction_schemes import TRI2024EnergyCorrectionScheme
+from mattergen.evaluation.reference.correction_schemes import TRI110Compatibility2024
 from mattergen.evaluation.reference.reference_dataset_serializer import LMDBGZSerializer
 from mattergen.evaluation.utils.structure_matcher import (
     DefaultDisorderedStructureMatcher,
@@ -49,7 +49,7 @@ def main(
         case "MP2020":
             energy_correction_scheme = MaterialsProject2020Compatibility()
         case "TRI2024":
-            energy_correction_scheme = TRI2024EnergyCorrectionScheme()
+            energy_correction_scheme = TRI110Compatibility2024()
     
     metrics = evaluate(
         structures=structures,
