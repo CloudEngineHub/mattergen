@@ -153,6 +153,13 @@ This script will try to read structures from disk in the following precedence or
 
 Here, we expect `energies.npy` to be a numpy array with the entries being `float` energies in the same order as the structures read from `$RESULTS_PATH`.
 
+> [!IMPORTANT]
+> For any task beyond benchmarking against existing literature, we recommend using the TRI2024 correction scheme and reference dataset. To do so, run:
+```bash
+git lfs pull -I data-release/alex-mp/reference_TRI2024correction.gz --exclude=""  # first download the reference dataset from Git LFS
+mattergen-evaluate --structures_path=$RESULTS_PATH --energies_path='energies.npy' --relax=False --structure_matcher='disordered' --save_as='metrics' --energy_correction_scheme="TRI2024" --reference_dataset_path="data-release/alex-mp/reference_TRI2024correction.gz" 
+```
+
 If you want to save the relaxed structures, toghether with their energies, forces, and stresses, add `--structures_output_path=YOUR_PATH` to the script call, like so:
 ```bash
 mattergen-evaluate --structures_path=$RESULTS_PATH --relax=True --structure_matcher='disordered' --save_as='metrics' --structures_output_path="relaxed_structures.extxyz"
