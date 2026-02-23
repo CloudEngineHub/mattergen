@@ -2,6 +2,7 @@
 # Licensed under the MIT License.
 
 from pymatgen.core.structure import Structure
+from pymatgen.entries.compatibility import Compatibility, MaterialsProject2020Compatibility
 
 from mattergen.common.utils.globals import get_device
 from mattergen.evaluation.metrics.evaluator import MetricsEvaluator
@@ -26,6 +27,7 @@ def evaluate(
     potential_load_path: str | None = None,
     device: str = str(get_device()),
     structures_output_path: str | None = None,
+    energy_correction_scheme: Compatibility = MaterialsProject2020Compatibility(),
 ) -> dict[str, float | int]:
     """Evaluate the structures against a reference dataset.
 
@@ -39,6 +41,7 @@ def evaluate(
         potential_load_path: Path to the Machine Learning potential to use for relaxation.
         device: Device to use for relaxation.
         structures_output_path: Path to save the relaxed structures.
+        energy_correction_scheme: Energy correction scheme to use for computing energy-based metrics. Must be compatible with the reference dataset used (e.g., MP2020correction reference dataset requires MP2020 energy correction scheme).
 
     Returns:
         metrics: a dictionary of metrics and their values.
@@ -57,6 +60,7 @@ def evaluate(
         original_structures=structures,
         reference=reference,
         structure_matcher=structure_matcher,
+        energy_correction_scheme=energy_correction_scheme
     )
     return evaluator.compute_metrics(
         metrics=evaluator.available_metrics,
