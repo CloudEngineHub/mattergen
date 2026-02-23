@@ -24,11 +24,11 @@ from mattergen.evaluation.metrics.core import BaseAggregateMetric, BaseMetric, B
 from mattergen.evaluation.metrics.energy import EnergyMetricsCapability, MissingTerminalsError
 from mattergen.evaluation.metrics.property import PropertyMetricsCapability
 from mattergen.evaluation.metrics.structure import StructureMetricsCapability
+from mattergen.evaluation.reference.correction_schemes import TRI110Compatibility2024
 from mattergen.evaluation.reference.presets import (
     ReferenceMP2020Correction,
     ReferenceTRI2024Correction,
 )
-from mattergen.evaluation.reference.correction_schemes import TRI2024EnergyCorrectionScheme
 from mattergen.evaluation.reference.reference_dataset import ReferenceDataset
 from mattergen.evaluation.utils.globals import DEFAULT_STABILITY_THRESHOLD
 from mattergen.evaluation.utils.logging import logger
@@ -107,7 +107,7 @@ class MetricsEvaluator:
     ) -> Self:
 
         if reference is None:
-            if type(energy_correction_scheme) == TRI2024EnergyCorrectionScheme:
+            if type(energy_correction_scheme) == TRI110Compatibility2024:
                 print("No reference dataset provided, but TRI correction scheme detected. Using TRI2024 corrected dataset as reference.")
                 reference = ReferenceTRI2024Correction()
             else:
@@ -356,9 +356,6 @@ def get_all_metrics_classes() -> list[Type[BaseMetric]]:
         for clsmembers_in_module in clsmembers
         for x in clsmembers_in_module
         if issubclass(x[1], BaseMetric)
-    ]
-
-    return [m for m in metric_classes if not m.__name__.startswith("Base")]
     ]
 
     return [m for m in metric_classes if not m.__name__.startswith("Base")]

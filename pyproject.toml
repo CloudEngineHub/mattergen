@@ -65,7 +65,7 @@ dependencies = [
 "pytest",
 "pytorch-lightning==2.0.6",
 "seaborn>=0.13.2",  # for plotting
-"setuptools",
+"setuptools<81",
 "SMACT",
 "sympy>=1.11.1",
 "torch==2.2.1+cu118; sys_platform == 'linux'", 
@@ -126,5 +126,5 @@ explicit = true
 
 
 [build-system]
-requires = ["setuptools >=77.0.3"]
+requires = ["setuptools <81"]
 build-backend = "setuptools.build_meta"
